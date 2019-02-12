@@ -1,0 +1,50 @@
+name:                servant-checked-exceptions-example
+version:             0.1.0.0
+github:              "jonathanknowles/servant-checked-exceptions-example"
+license:             BSD3
+author:              "Jonathan Knowles"
+maintainer:          "mail@jonathanknowles.net"
+copyright:           "Jonathan Knowles"
+
+dependencies:
+- aeson
+- base >= 4.7 && < 5
+- bytestring
+- containers
+- http-client
+- servant
+- servant-checked-exceptions
+- servant-client
+- servant-server
+- servant-swagger
+- swagger2
+- text
+- time
+- wai
+- warp
+
+library:
+  source-dirs: common
+
+executables:
+
+  client:
+    main:                Main.hs
+    source-dirs:         client
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - servant-checked-exceptions-example
+
+  server:
+    main:                Main.hs
+    source-dirs:         server
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - servant-checked-exceptions-example
+
