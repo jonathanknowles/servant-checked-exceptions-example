@@ -20,12 +20,12 @@ main :: IO ()
 main = run port $ serve api server
 
 server :: Server Api
-server = getLocation
+server = getLocationById
 
-getLocation
+getLocationById
   :: Integer
   -> Handler (Envelope '[InvalidLocationError, NoSuchLocationError] Location)
-getLocation lid
+getLocationById lid
   | lid < 0   = pureErrEnvelope InvalidLocationError
   | otherwise = maybe (pureErrEnvelope NoSuchLocationError) pureSuccEnvelope
                 $ Map.lookup lid locationMap
