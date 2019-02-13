@@ -11,7 +11,7 @@ import Data.Map.Strict (Map)
 import Data.Text (Text)
 import Network.Wai.Handler.Warp (run)
 import Servant (Handler, Server, serve)
-import Servant.Checked.Exceptions (Envelope, toErrEnvelope, toSuccEnvelope)
+import Servant.Checked.Exceptions (Envelope, pureErrEnvelope, pureSuccEnvelope)
 
 import qualified Data.ByteString.Lazy.Char8 as BSL8
 import qualified Data.Map.Strict as Map
@@ -26,10 +26,9 @@ getLocation
   :: Integer
   -> Handler (Envelope '[InvalidLocationError, NoSuchLocationError] Location)
 getLocation lid
-  | lid < 0   = pure $ toErrEnvelope InvalidLocationError
-  | otherwise = pure
-      $ maybe (toErrEnvelope NoSuchLocationError) toSuccEnvelope
-      $ Map.lookup lid locationMap
+  | lid < 0   = pureErrEnvelope InvalidLocationError
+  | otherwise = maybe (pureErrEnvelope NoSuchLocationError) pureSuccEnvelope
+                $ Map.lookup lid locationMap
 
 locationMap :: Map Integer Location
 locationMap = Map.fromDistinctAscList
