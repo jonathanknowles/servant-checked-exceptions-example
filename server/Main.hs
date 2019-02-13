@@ -29,16 +29,16 @@ main = do
 
 server :: IORef LocationMap -> Server Api
 server locationMapRef =
-    serverAddLocation :<|> serverFindLocationById :<|> serverFindLocationByName
+    addLocation :<|> findLocationById :<|> findLocationByName
 
   where
 
-    serverAddLocation
+    addLocation
       :: Text
       -> Handler (Envelope '[ DuplicateLocationNameError
                             , EmptyLocationNameError
                             ] Location)
-    serverAddLocation name = do
+    addLocation name = do
       locationMap <- liftIO $ readIORef locationMapRef
       if name == ""
       then pureErrEnvelope EmptyLocationNameError
@@ -50,24 +50,24 @@ server locationMapRef =
           liftIO $ writeIORef locationMapRef locationMap'
           pureSuccEnvelope location'
 
-    serverFindLocationById
+    findLocationById
       :: Integer
       -> Handler (Envelope '[ NegativeLocationIdError
                             , NoMatchingLocationError
                             ] Location)
-    serverFindLocationById key
+    findLocationById key
       | key < 0   = pureErrEnvelope NegativeLocationIdError
       | otherwise = do
           locationMap <- liftIO $ readIORef locationMapRef
           maybe (pureErrEnvelope NoMatchingLocationError)
             pureSuccEnvelope $ LocationMap.findById locationMap key
 
-    serverFindLocationByName
+    findLocationByName
       :: Text
       -> Handler (Envelope '[ EmptyLocationNameError
                             , NoMatchingLocationError
                             ] Location)
-    serverFindLocationByName key
+    findLocationByName key
       | key == "" = pureErrEnvelope EmptyLocationNameError
       | otherwise = do
           locationMap <- liftIO $ readIORef locationMapRef
