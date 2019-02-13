@@ -13,7 +13,10 @@ import Servant.Swagger (HasSwagger, toSwagger)
 
 import qualified Data.ByteString.Lazy.Char8 as BLC8
 
--- | The @'Throws'@ combinator currently does not change our specification.
+-- | For the moment, ignore the @'Throws'@ combinator.
+--
+-- Ultimately, we would like to add an appropriate response section in the
+-- generated Swagger output for each instance of @'Throws'@.
 instance (HasSwagger sub) => HasSwagger (Throws err :> sub) where
   toSwagger _ = toSwagger (Proxy :: Proxy sub)
 
