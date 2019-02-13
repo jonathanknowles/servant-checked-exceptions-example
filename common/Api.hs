@@ -18,6 +18,7 @@ module Api
   ) where
 
 import Data.Aeson (FromJSON, ToJSON)
+import Data.Swagger (ToSchema)
 import Data.Text (Text)
 import GHC.Generics (Generic)
 import Servant (JSON, Summary, Proxy (..))
@@ -56,7 +57,7 @@ type FindLocationByName = "location"
 data Location = Location
   { locationId   :: Integer
   , locationName :: Text
-  } deriving (Eq, Generic, Show, FromJSON, ToJSON)
+  } deriving (Eq, Generic, Show, FromJSON, ToJSON, ToSchema)
 
 data DuplicateLocationNameError = DuplicateLocationNameError
   deriving (Eq, Generic, Show, FromJSON, ToJSON)
