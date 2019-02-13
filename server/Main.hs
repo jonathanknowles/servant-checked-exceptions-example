@@ -26,22 +26,24 @@ main = run port $ serve api server
 server :: Server Api
 server = addLocation :<|> getLocationById
 
-addLocation
-  :: Text
-  -> Handler (Envelope '[ DuplicateLocationNameError
-                        , EmptyLocationNameError
-                        ] Location)
-addLocation name = pureSuccEnvelope (Location 0 "Dummy")
+  where
 
-getLocationById
-  :: Integer
-  -> Handler (Envelope '[ NegativeLocationIdError
-                        , NoMatchingLocationError
-                        ] Location)
-getLocationById lid
-  | lid < 0   = pureErrEnvelope NegativeLocationIdError
-  | otherwise = maybe (pureErrEnvelope NoMatchingLocationError) pureSuccEnvelope
-                $ Map.lookup lid locationMap
+    addLocation
+      :: Text
+      -> Handler (Envelope '[ DuplicateLocationNameError
+                            , EmptyLocationNameError
+                            ] Location)
+    addLocation name = pureSuccEnvelope (Location 0 "Dummy")
+
+    getLocationById
+      :: Integer
+      -> Handler (Envelope '[ NegativeLocationIdError
+                            , NoMatchingLocationError
+                            ] Location)
+    getLocationById lid
+      | lid < 0   = pureErrEnvelope NegativeLocationIdError
+      | otherwise = maybe (pureErrEnvelope NoMatchingLocationError)
+                      pureSuccEnvelope $ Map.lookup lid locationMap
 
 locationMap :: Map Integer Location
 locationMap = Map.fromDistinctAscList
