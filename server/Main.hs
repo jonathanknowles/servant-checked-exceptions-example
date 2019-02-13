@@ -19,8 +19,7 @@ import Servant (Handler, Server, serve)
 import Servant.API ((:<|>) (..))
 import Servant.Checked.Exceptions (Envelope, pureErrEnvelope, pureSuccEnvelope)
 
-import qualified LocationMap as LocationMap
-import qualified Data.ByteString.Lazy.Char8 as BSL8
+import qualified LocationMap
 
 main :: IO ()
 main = do
