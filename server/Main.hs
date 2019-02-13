@@ -4,13 +4,17 @@
 module Main where
 
 import Api
-        ( Api, api, Location (..), InvalidLocationError (..)
-        , NoSuchLocationError (..) )
+        ( Api, api, Location (..)
+        , DuplicateLocationNameError (..)
+        , EmptyLocationNameError (..)
+        , NegativeLocationIdError (..)
+        , NoMatchingLocationError (..) )
 import Config (port)
 import Data.Map.Strict (Map)
 import Data.Text (Text)
 import Network.Wai.Handler.Warp (run)
 import Servant (Handler, Server, serve)
+import Servant.API ((:<|>) (..))
 import Servant.Checked.Exceptions (Envelope, pureErrEnvelope, pureSuccEnvelope)
 
 import qualified Data.ByteString.Lazy.Char8 as BSL8
@@ -20,14 +24,23 @@ main :: IO ()
 main = run port $ serve api server
 
 server :: Server Api
-server = getLocationById
+server = addLocation :<|> getLocationById
+
+addLocation
+  :: Text
+  -> Handler (Envelope '[ DuplicateLocationNameError
+                        , EmptyLocationNameError
+                        ] Location)
+addLocation name = pureSuccEnvelope (Location 0 "Dummy")
 
 getLocationById
   :: Integer
-  -> Handler (Envelope '[InvalidLocationError, NoSuchLocationError] Location)
+  -> Handler (Envelope '[ NegativeLocationIdError
+                        , NoMatchingLocationError
+                        ] Location)
 getLocationById lid
-  | lid < 0   = pureErrEnvelope InvalidLocationError
-  | otherwise = maybe (pureErrEnvelope NoSuchLocationError) pureSuccEnvelope
+  | lid < 0   = pureErrEnvelope NegativeLocationIdError
+  | otherwise = maybe (pureErrEnvelope NoMatchingLocationError) pureSuccEnvelope
                 $ Map.lookup lid locationMap
 
 locationMap :: Map Integer Location

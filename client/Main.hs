@@ -2,19 +2,33 @@
 
 module Main where
 
-import Api (InvalidLocationError, NoSuchLocationError, Location, api)
-
+import Api
+        ( Api, api, Location (..)
+        , DuplicateLocationNameError (..)
+        , EmptyLocationNameError (..)
+        , NegativeLocationIdError (..)
+        , NoMatchingLocationError (..) )
 import Config (baseUrl)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad (void)
+import Data.Text (Text)
 import Network.HTTP.Client (defaultManagerSettings, newManager)
+import Servant.API ((:<|>) (..))
 import Servant.Client (ClientM (..), client, mkClientEnv, runClientM)
 import Servant.Checked.Exceptions (Envelope, catchesEnvelope)
 
+addLocation
+  :: Text
+  -> ClientM (Envelope '[ DuplicateLocationNameError
+                        , EmptyLocationNameError
+                        ] Location)
+
 getLocationById
   :: Integer
-  -> ClientM (Envelope '[InvalidLocationError, NoSuchLocationError] Location)
-getLocationById = client api
+  -> ClientM (Envelope '[ NegativeLocationIdError
+                        , NoMatchingLocationError] Location)
+
+addLocation :<|> getLocationById = client api
 
 main :: IO ()
 main = do
