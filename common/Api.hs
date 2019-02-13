@@ -7,8 +7,10 @@
 module Api
   ( Api
   , api
-  , GetLocationById
   , Location (..)
+  , AddLocation
+  , FindLocationById
+  , FindLocationByName
   , DuplicateLocationNameError (..)
   , EmptyLocationNameError (..)
   , NegativeLocationIdError (..)
@@ -22,7 +24,7 @@ import Servant (JSON, Summary, Proxy (..))
 import Servant.API ((:<|>) (..), (:>), Capture, Get)
 import Servant.Checked.Exceptions (ErrStatus (..), Throws)
 
-type Api = AddLocation :<|> GetLocationById
+type Api = AddLocation :<|> FindLocationById :<|> FindLocationByName
 
 api :: Proxy Api
 api = Proxy
@@ -35,11 +37,19 @@ type AddLocation = "location"
   :> Throws EmptyLocationNameError
   :> Get '[JSON] Location
 
-type GetLocationById = "location"
-  :> "getById"
-  :> Summary "Get a location by ID"
+type FindLocationById = "location"
+  :> "findById"
+  :> Summary "Find a location by ID"
   :> Capture "locationId" Integer
   :> Throws NegativeLocationIdError
+  :> Throws NoMatchingLocationError
+  :> Get '[JSON] Location
+
+type FindLocationByName = "location"
+  :> "findByName"
+  :> Summary "Find a location by name"
+  :> Capture "locationName" Text
+  :> Throws EmptyLocationNameError
   :> Throws NoMatchingLocationError
   :> Get '[JSON] Location
 
