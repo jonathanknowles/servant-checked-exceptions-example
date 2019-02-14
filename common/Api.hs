@@ -91,11 +91,11 @@ parseText x = withText (show x) $
       . readMaybe . Text.unpack
 
 instance ErrStatus LocationNameHasInvalidCharsError where
-  toErrStatus _ = toEnum 400
+  toErrStatus _ = toEnum 200
 instance ErrStatus LocationNameTooShortError where
-  toErrStatus _ = toEnum 400
+  toErrStatus _ = toEnum 200
 instance ErrStatus NoMatchingLocationError where
-  toErrStatus _ = toEnum 404
+  toErrStatus _ = toEnum 200
 
 instance ErrDescription LocationNameHasInvalidCharsError where
   toErrDescription _ =
