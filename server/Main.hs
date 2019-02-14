@@ -5,9 +5,11 @@ module Main where
 
 import Api
         ( Api, api, Location (..)
+        , LocationNameHasInvalidCharsError (..)
+        , locationNameHasInvalidChars
         , LocationNameTooShortError (..)
-        , NoMatchingLocationError (..)
-        , minimumLocationNameLength )
+        , locationNameTooShort
+        , NoMatchingLocationError (..) )
 import Config (port)
 import Control.Monad.IO.Class (liftIO)
 import Data.IORef (IORef (..), newIORef, readIORef, writeIORef)
@@ -34,16 +36,20 @@ server locationMapRef =
 
     addLocation
       :: Text
-      -> Handler (Envelope '[ LocationNameTooShortError
+      -> Handler (Envelope '[ LocationNameHasInvalidCharsError
+                            , LocationNameTooShortError
                             ] Location)
     addLocation name = do
       locationMap <- liftIO $ readIORef locationMapRef
-      if Text.length name < minimumLocationNameLength
-      then pureErrEnvelope LocationNameTooShortError
-      else do
-        let (locationMap', location') = LocationMap.add locationMap name
-        liftIO $ writeIORef locationMapRef locationMap'
-        pureSuccEnvelope location'
+      if locationNameHasInvalidChars name
+      then pureErrEnvelope LocationNameHasInvalidCharsError
+      else
+        if locationNameTooShort name
+        then pureErrEnvelope LocationNameTooShortError
+        else do
+          let (locationMap', location') = LocationMap.add locationMap name
+          liftIO $ writeIORef locationMapRef locationMap'
+          pureSuccEnvelope location'
 
     findLocationById
       :: Integer

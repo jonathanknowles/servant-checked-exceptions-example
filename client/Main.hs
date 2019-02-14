@@ -6,6 +6,7 @@ module Main where
 import Api
         ( Api, api
         , Location (..)
+        , LocationNameHasInvalidCharsError (..)
         , LocationNameTooShortError (..)
         , NoMatchingLocationError (..) )
 import Config (baseUrl)
@@ -19,7 +20,8 @@ import Servant.Checked.Exceptions (Envelope, catchesEnvelope)
 
 addLocation
   :: Text
-  -> ClientM (Envelope '[ LocationNameTooShortError
+  -> ClientM (Envelope '[ LocationNameHasInvalidCharsError
+                        , LocationNameTooShortError
                         ] Location)
 
 findLocationById
