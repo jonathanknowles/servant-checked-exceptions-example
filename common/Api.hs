@@ -12,7 +12,6 @@ module Api
   , FindLocationById
   , FindLocationByName
   , LocationNameTooShortError (..)
-  , NegativeLocationIdError (..)
   , NoMatchingLocationError (..)
   , minimumLocationNameLength
   ) where
@@ -41,7 +40,6 @@ type AddLocation = "location"
 type FindLocationById = "location"
   :> "findById"
   :> Summary "Find a location by ID"
-  :> Throws NegativeLocationIdError
   :> Throws NoMatchingLocationError
   :> Capture "locationId" Integer
   :> Get '[JSON] Location
@@ -60,22 +58,16 @@ data Location = Location
 
 data LocationNameTooShortError = LocationNameTooShortError
   deriving (Eq, Generic, Show, FromJSON, ToJSON)
-data NegativeLocationIdError = NegativeLocationIdError
-  deriving (Eq, Generic, Show, FromJSON, ToJSON)
 data NoMatchingLocationError = NoMatchingLocationError
   deriving (Eq, Generic, Show, FromJSON, ToJSON)
 
 instance ErrStatus LocationNameTooShortError where
-  toErrStatus _ = toEnum 400
-instance ErrStatus NegativeLocationIdError where
   toErrStatus _ = toEnum 400
 instance ErrStatus NoMatchingLocationError where
   toErrStatus _ = toEnum 404
 
 instance ErrDescription LocationNameTooShortError where
   toErrDescription _ = "The specified location name was too short."
-instance ErrDescription NegativeLocationIdError where
-  toErrDescription _ = "A location ID cannot be negative."
 instance ErrDescription NoMatchingLocationError where
   toErrDescription _ = "A matching location was not found."
 

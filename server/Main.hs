@@ -6,7 +6,6 @@ module Main where
 import Api
         ( Api, api, Location (..)
         , LocationNameTooShortError (..)
-        , NegativeLocationIdError (..)
         , NoMatchingLocationError (..)
         , minimumLocationNameLength )
 import Config (port)
@@ -48,15 +47,12 @@ server locationMapRef =
 
     findLocationById
       :: Integer
-      -> Handler (Envelope '[ NegativeLocationIdError
-                            , NoMatchingLocationError
+      -> Handler (Envelope '[ NoMatchingLocationError
                             ] Location)
-    findLocationById key
-      | key < 0   = pureErrEnvelope NegativeLocationIdError
-      | otherwise = do
-          locationMap <- liftIO $ readIORef locationMapRef
-          maybe (pureErrEnvelope NoMatchingLocationError)
-            pureSuccEnvelope $ LocationMap.findById locationMap key
+    findLocationById key = do
+      locationMap <- liftIO $ readIORef locationMapRef
+      maybe (pureErrEnvelope NoMatchingLocationError)
+        pureSuccEnvelope $ LocationMap.findById locationMap key
 
     findLocationByName
       :: Text

@@ -7,7 +7,6 @@ import Api
         ( Api, api
         , Location (..)
         , LocationNameTooShortError (..)
-        , NegativeLocationIdError (..)
         , NoMatchingLocationError (..) )
 import Config (baseUrl)
 import Control.Monad.IO.Class (liftIO)
@@ -25,8 +24,7 @@ addLocation
 
 findLocationById
   :: Integer
-  -> ClientM (Envelope '[ NegativeLocationIdError
-                        , NoMatchingLocationError] Location)
+  -> ClientM (Envelope '[ NoMatchingLocationError] Location)
 
 findLocationByName
   :: Text
@@ -49,7 +47,7 @@ program = do
   result <- findLocationById locationId
   liftIO $ do
     putStrLn "Result:"
-    putStrLn $ catchesEnvelope (show, show) show result
+    putStrLn $ catchesEnvelope show show result
 
 locations :: [Text]
 locations =
