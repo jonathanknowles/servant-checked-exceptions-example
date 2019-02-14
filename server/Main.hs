@@ -51,8 +51,7 @@ server locationMapRef =
 
     findLocationById
       :: Integer
-      -> Handler (Envelope '[ NoMatchingLocationError
-                            ] Location)
+      -> Handler (Envelope '[ NoMatchingLocationError ] Location)
     findLocationById key = do
       locationMap <- liftIO $ readIORef locationMapRef
       maybe (pureErrEnvelope NoMatchingLocationError)
@@ -60,8 +59,7 @@ server locationMapRef =
 
     findLocationByName
       :: Text
-      -> Handler (Envelope '[ NoMatchingLocationError
-                            ] Location)
+      -> Handler (Envelope '[ NoMatchingLocationError ] Location)
     findLocationByName key = do
       locationMap <- liftIO $ readIORef locationMapRef
       maybe (pureErrEnvelope NoMatchingLocationError)
