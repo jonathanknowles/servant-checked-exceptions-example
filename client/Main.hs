@@ -6,7 +6,7 @@ module Main where
 import Api
         ( Api, api
         , Location (..)
-        , EmptyLocationNameError (..)
+        , LocationNameTooShortError (..)
         , NegativeLocationIdError (..)
         , NoMatchingLocationError (..) )
 import Config (baseUrl)
@@ -20,7 +20,7 @@ import Servant.Checked.Exceptions (Envelope, catchesEnvelope)
 
 addLocation
   :: Text
-  -> ClientM (Envelope '[ EmptyLocationNameError
+  -> ClientM (Envelope '[ LocationNameTooShortError
                         ] Location)
 
 findLocationById
@@ -30,8 +30,7 @@ findLocationById
 
 findLocationByName
   :: Text
-  -> ClientM (Envelope '[ EmptyLocationNameError
-                        , NoMatchingLocationError] Location)
+  -> ClientM (Envelope '[ NoMatchingLocationError] Location)
 
 addLocation :<|> findLocationById :<|> findLocationByName = client api
 

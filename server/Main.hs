@@ -5,9 +5,10 @@ module Main where
 
 import Api
         ( Api, api, Location (..)
-        , EmptyLocationNameError (..)
+        , LocationNameTooShortError (..)
         , NegativeLocationIdError (..)
-        , NoMatchingLocationError (..) )
+        , NoMatchingLocationError (..)
+        , minimumLocationNameLength )
 import Config (port)
 import Control.Monad.IO.Class (liftIO)
 import Data.IORef (IORef (..), newIORef, readIORef, writeIORef)
@@ -19,6 +20,7 @@ import Servant.API ((:<|>) (..))
 import Servant.Checked.Exceptions (Envelope, pureErrEnvelope, pureSuccEnvelope)
 
 import qualified LocationMap
+import qualified Data.Text as Text
 
 main :: IO ()
 main = do
@@ -33,12 +35,12 @@ server locationMapRef =
 
     addLocation
       :: Text
-      -> Handler (Envelope '[ EmptyLocationNameError
+      -> Handler (Envelope '[ LocationNameTooShortError
                             ] Location)
     addLocation name = do
       locationMap <- liftIO $ readIORef locationMapRef
-      if name == ""
-      then pureErrEnvelope EmptyLocationNameError
+      if Text.length name < minimumLocationNameLength
+      then pureErrEnvelope LocationNameTooShortError
       else do
         let (locationMap', location') = LocationMap.add locationMap name
         liftIO $ writeIORef locationMapRef locationMap'
@@ -58,13 +60,10 @@ server locationMapRef =
 
     findLocationByName
       :: Text
-      -> Handler (Envelope '[ EmptyLocationNameError
-                            , NoMatchingLocationError
+      -> Handler (Envelope '[ NoMatchingLocationError
                             ] Location)
-    findLocationByName key
-      | key == "" = pureErrEnvelope EmptyLocationNameError
-      | otherwise = do
-          locationMap <- liftIO $ readIORef locationMapRef
-          maybe (pureErrEnvelope NoMatchingLocationError)
-            pureSuccEnvelope $ LocationMap.findByName locationMap key
+    findLocationByName key = do
+      locationMap <- liftIO $ readIORef locationMapRef
+      maybe (pureErrEnvelope NoMatchingLocationError)
+        pureSuccEnvelope $ LocationMap.findByName locationMap key
 

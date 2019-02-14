@@ -11,9 +11,10 @@ module Api
   , AddLocation
   , FindLocationById
   , FindLocationByName
-  , EmptyLocationNameError (..)
+  , LocationNameTooShortError (..)
   , NegativeLocationIdError (..)
   , NoMatchingLocationError (..)
+  , minimumLocationNameLength
   ) where
 
 import Data.Aeson (FromJSON, ToJSON)
@@ -33,7 +34,7 @@ api = Proxy
 type AddLocation = "location"
   :> "add"
   :> Summary "Add a new location"
-  :> Throws EmptyLocationNameError
+  :> Throws LocationNameTooShortError
   :> Capture "locationName" Text
   :> Get '[JSON] Location
 
@@ -48,7 +49,6 @@ type FindLocationById = "location"
 type FindLocationByName = "location"
   :> "findByName"
   :> Summary "Find a location by name"
-  :> Throws EmptyLocationNameError
   :> Throws NoMatchingLocationError
   :> Capture "locationName" Text
   :> Get '[JSON] Location
@@ -58,24 +58,27 @@ data Location = Location
   , locationName :: Text
   } deriving (Eq, Generic, Show, FromJSON, ToJSON, ToSchema)
 
-data EmptyLocationNameError = EmptyLocationNameError
+data LocationNameTooShortError = LocationNameTooShortError
   deriving (Eq, Generic, Show, FromJSON, ToJSON)
 data NegativeLocationIdError = NegativeLocationIdError
   deriving (Eq, Generic, Show, FromJSON, ToJSON)
 data NoMatchingLocationError = NoMatchingLocationError
   deriving (Eq, Generic, Show, FromJSON, ToJSON)
 
-instance ErrStatus EmptyLocationNameError where
+instance ErrStatus LocationNameTooShortError where
   toErrStatus _ = toEnum 400
 instance ErrStatus NegativeLocationIdError where
   toErrStatus _ = toEnum 400
 instance ErrStatus NoMatchingLocationError where
   toErrStatus _ = toEnum 404
 
-instance ErrDescription EmptyLocationNameError where
-  toErrDescription _ = "The specified location name is empty."
+instance ErrDescription LocationNameTooShortError where
+  toErrDescription _ = "The specified location name was too short."
 instance ErrDescription NegativeLocationIdError where
   toErrDescription _ = "A location ID cannot be negative."
 instance ErrDescription NoMatchingLocationError where
   toErrDescription _ = "A matching location was not found."
+
+minimumLocationNameLength :: Int
+minimumLocationNameLength = 2
 
