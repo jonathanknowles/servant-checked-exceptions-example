@@ -11,7 +11,6 @@ module Api
   , AddLocation
   , FindLocationById
   , FindLocationByName
-  , DuplicateLocationNameError (..)
   , EmptyLocationNameError (..)
   , NegativeLocationIdError (..)
   , NoMatchingLocationError (..)
@@ -34,7 +33,6 @@ api = Proxy
 type AddLocation = "location"
   :> "add"
   :> Summary "Add a new location"
-  :> Throws DuplicateLocationNameError
   :> Throws EmptyLocationNameError
   :> Capture "locationName" Text
   :> Get '[JSON] Location
@@ -60,8 +58,6 @@ data Location = Location
   , locationName :: Text
   } deriving (Eq, Generic, Show, FromJSON, ToJSON, ToSchema)
 
-data DuplicateLocationNameError = DuplicateLocationNameError
-  deriving (Eq, Generic, Show, FromJSON, ToJSON)
 data EmptyLocationNameError = EmptyLocationNameError
   deriving (Eq, Generic, Show, FromJSON, ToJSON)
 data NegativeLocationIdError = NegativeLocationIdError
@@ -69,8 +65,6 @@ data NegativeLocationIdError = NegativeLocationIdError
 data NoMatchingLocationError = NoMatchingLocationError
   deriving (Eq, Generic, Show, FromJSON, ToJSON)
 
-instance ErrStatus DuplicateLocationNameError where
-  toErrStatus _ = toEnum 400
 instance ErrStatus EmptyLocationNameError where
   toErrStatus _ = toEnum 400
 instance ErrStatus NegativeLocationIdError where
@@ -78,8 +72,6 @@ instance ErrStatus NegativeLocationIdError where
 instance ErrStatus NoMatchingLocationError where
   toErrStatus _ = toEnum 404
 
-instance ErrDescription DuplicateLocationNameError where
-  toErrDescription _ = "The specified location name already exists."
 instance ErrDescription EmptyLocationNameError where
   toErrDescription _ = "The specified location name is empty."
 instance ErrDescription NegativeLocationIdError where

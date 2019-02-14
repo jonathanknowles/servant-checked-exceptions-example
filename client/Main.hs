@@ -6,7 +6,6 @@ module Main where
 import Api
         ( Api, api
         , Location (..)
-        , DuplicateLocationNameError (..)
         , EmptyLocationNameError (..)
         , NegativeLocationIdError (..)
         , NoMatchingLocationError (..) )
@@ -21,8 +20,7 @@ import Servant.Checked.Exceptions (Envelope, catchesEnvelope)
 
 addLocation
   :: Text
-  -> ClientM (Envelope '[ DuplicateLocationNameError
-                        , EmptyLocationNameError
+  -> ClientM (Envelope '[ EmptyLocationNameError
                         ] Location)
 
 findLocationById

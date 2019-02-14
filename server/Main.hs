@@ -5,7 +5,6 @@ module Main where
 
 import Api
         ( Api, api, Location (..)
-        , DuplicateLocationNameError (..)
         , EmptyLocationNameError (..)
         , NegativeLocationIdError (..)
         , NoMatchingLocationError (..) )
@@ -34,20 +33,16 @@ server locationMapRef =
 
     addLocation
       :: Text
-      -> Handler (Envelope '[ DuplicateLocationNameError
-                            , EmptyLocationNameError
+      -> Handler (Envelope '[ EmptyLocationNameError
                             ] Location)
     addLocation name = do
       locationMap <- liftIO $ readIORef locationMapRef
       if name == ""
       then pureErrEnvelope EmptyLocationNameError
-      else
-        if LocationMap.containsName locationMap name
-        then pureErrEnvelope DuplicateLocationNameError
-        else do
-          let (locationMap', location') = LocationMap.add locationMap name
-          liftIO $ writeIORef locationMapRef locationMap'
-          pureSuccEnvelope location'
+      else do
+        let (locationMap', location') = LocationMap.add locationMap name
+        liftIO $ writeIORef locationMapRef locationMap'
+        pureSuccEnvelope location'
 
     findLocationById
       :: Integer
