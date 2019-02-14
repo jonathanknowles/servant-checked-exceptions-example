@@ -9,6 +9,7 @@ import Data.Aeson (encode)
 import Servant (Proxy (..))
 import Servant.API ((:>))
 import Servant.Checked.Exceptions (ErrStatus, Throws)
+import Servant.Checked.Exceptions.Extra (ErrDescription)
 import Servant.Swagger (HasSwagger, toSwagger)
 
 import qualified Data.ByteString.Lazy.Char8 as BLC8
@@ -17,7 +18,8 @@ import qualified Data.ByteString.Lazy.Char8 as BLC8
 --
 -- Ultimately, we would like to add an appropriate response section in the
 -- generated Swagger output for each instance of @'Throws'@.
-instance (HasSwagger sub) => HasSwagger (Throws err :> sub) where
+instance (HasSwagger sub, ErrDescription err, ErrStatus err) =>
+    HasSwagger (Throws err :> sub) where
   toSwagger _ = toSwagger (Proxy :: Proxy sub)
 
 main :: IO ()

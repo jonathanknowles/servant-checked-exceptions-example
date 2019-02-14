@@ -24,6 +24,7 @@ import GHC.Generics (Generic)
 import Servant (JSON, Summary, Proxy (..))
 import Servant.API ((:<|>) (..), (:>), Capture, Get)
 import Servant.Checked.Exceptions (ErrStatus (..), Throws)
+import Servant.Checked.Exceptions.Extra (ErrDescription (..))
 
 type Api = AddLocation :<|> FindLocationById :<|> FindLocationByName
 
@@ -77,8 +78,6 @@ instance ErrStatus NegativeLocationIdError where
 instance ErrStatus NoMatchingLocationError where
   toErrStatus _ = toEnum 404
 
-class ErrDescription e where
-  toErrDescription :: e -> Text
 instance ErrDescription DuplicateLocationNameError where
   toErrDescription _ = "The specified location name already exists."
 instance ErrDescription EmptyLocationNameError where
