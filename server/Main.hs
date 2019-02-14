@@ -50,18 +50,18 @@ server locationMapRef =
           pureSuccEnvelope location'
 
     findLocationById
-      :: Integer
-      -> Handler (Envelope '[ NoMatchingLocationError ] Location)
-    findLocationById key = do
-      locationMap <- liftIO $ readIORef locationMapRef
-      maybe (pureErrEnvelope NoMatchingLocationError)
-        pureSuccEnvelope $ LocationMap.findById locationMap key
+      :: Integer -> Handler (Envelope '[NoMatchingLocationError] Location)
+    findLocationById = findLocation LocationMap.findById
 
     findLocationByName
-      :: Text
-      -> Handler (Envelope '[ NoMatchingLocationError ] Location)
-    findLocationByName key = do
+      :: Text -> Handler (Envelope '[NoMatchingLocationError] Location)
+    findLocationByName = findLocation LocationMap.findByName
+
+    findLocation
+      :: (LocationMap -> a -> Maybe Location) -> a
+      -> Handler (Envelope '[NoMatchingLocationError] Location)
+    findLocation find key = do
       locationMap <- liftIO $ readIORef locationMapRef
       maybe (pureErrEnvelope NoMatchingLocationError)
-        pureSuccEnvelope $ LocationMap.findByName locationMap key
+        pureSuccEnvelope $ find locationMap key
 
