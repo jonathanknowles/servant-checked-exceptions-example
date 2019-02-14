@@ -34,25 +34,25 @@ api = Proxy
 type AddLocation = "location"
   :> "add"
   :> Summary "Add a new location"
-  :> Capture "locationName" Text
   :> Throws DuplicateLocationNameError
   :> Throws EmptyLocationNameError
+  :> Capture "locationName" Text
   :> Get '[JSON] Location
 
 type FindLocationById = "location"
   :> "findById"
   :> Summary "Find a location by ID"
-  :> Capture "locationId" Integer
   :> Throws NegativeLocationIdError
   :> Throws NoMatchingLocationError
+  :> Capture "locationId" Integer
   :> Get '[JSON] Location
 
 type FindLocationByName = "location"
   :> "findByName"
   :> Summary "Find a location by name"
-  :> Capture "locationName" Text
   :> Throws EmptyLocationNameError
   :> Throws NoMatchingLocationError
+  :> Capture "locationName" Text
   :> Get '[JSON] Location
 
 data Location = Location

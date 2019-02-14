@@ -12,6 +12,7 @@ dependencies:
 - bytestring
 - containers
 - http-client
+- lens
 - servant
 - servant-checked-exceptions
 - servant-client
