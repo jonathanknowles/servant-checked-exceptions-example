@@ -38,14 +38,13 @@ server locationMapRef =
       -> Handler (Envelope '[ LocationNameHasInvalidCharsError
                             , LocationNameTooShortError
                             ] Location)
-    addLocation name = do
-      locationMap <- liftIO $ readIORef locationMapRef
-      if locationNameHasInvalidChars name
-      then pureErrEnvelope LocationNameHasInvalidCharsError
-      else
-        if locationNameTooShort name
-        then pureErrEnvelope LocationNameTooShortError
-        else do
+    addLocation name
+      | locationNameHasInvalidChars name =
+          pureErrEnvelope LocationNameHasInvalidCharsError
+      | locationNameTooShort name =
+          pureErrEnvelope LocationNameTooShortError
+      | otherwise = do
+          locationMap <- liftIO $ readIORef locationMapRef
           let (locationMap', location') = LocationMap.add locationMap name
           liftIO $ writeIORef locationMapRef locationMap'
           pureSuccEnvelope location'
