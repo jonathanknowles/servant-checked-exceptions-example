@@ -18,7 +18,8 @@ module Api
   , NoMatchingLocationError (..)
   ) where
 
-import Data.Aeson (FromJSON, ToJSON)
+import Data.Aeson (FromJSON (..), ToJSON (..), withText)
+import Data.Aeson.Types (Parser, Value)
 import Data.Swagger (ToSchema)
 import Data.Text (Text)
 import GHC.Generics (Generic)
@@ -26,6 +27,7 @@ import Servant (JSON, Summary, Proxy (..))
 import Servant.API ((:<|>) (..), (:>), Capture, Get, Put)
 import Servant.Checked.Exceptions (ErrStatus (..), Throws)
 import Servant.Checked.Exceptions.Extra (ErrDescription (..))
+import Text.Read (readMaybe)
 
 import qualified Data.Char as Char
 import qualified Data.Text as Text
@@ -63,11 +65,30 @@ data Location = Location
   } deriving (Eq, Generic, Show, FromJSON, ToJSON, ToSchema)
 
 data LocationNameTooShortError = LocationNameTooShortError
-  deriving (Eq, Generic, Show, FromJSON, ToJSON)
+  deriving (Eq, Generic, Read, Show)
 data LocationNameHasInvalidCharsError = LocationNameHasInvalidCharsError
-  deriving (Eq, Generic, Show, FromJSON, ToJSON)
+  deriving (Eq, Generic, Read, Show)
 data NoMatchingLocationError = NoMatchingLocationError
-  deriving (Eq, Generic, Show, FromJSON, ToJSON)
+  deriving (Eq, Generic, Read, Show)
+
+instance ToJSON LocationNameTooShortError where
+  toJSON = toJSON . show
+instance ToJSON LocationNameHasInvalidCharsError where
+  toJSON = toJSON . show
+instance ToJSON NoMatchingLocationError where
+  toJSON = toJSON . show
+
+instance FromJSON LocationNameTooShortError where
+  parseJSON = parseText LocationNameTooShortError
+instance FromJSON LocationNameHasInvalidCharsError where
+  parseJSON = parseText LocationNameHasInvalidCharsError
+instance FromJSON NoMatchingLocationError where
+  parseJSON = parseText NoMatchingLocationError
+
+parseText :: Show a => Read a => a -> Value -> Parser a
+parseText x = withText (show x) $
+    maybe (fail (show x ++ " parse failure")) pure
+      . readMaybe . Text.unpack
 
 instance ErrStatus LocationNameHasInvalidCharsError where
   toErrStatus _ = toEnum 400
