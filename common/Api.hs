@@ -22,7 +22,7 @@ import Data.Swagger (ToSchema)
 import Data.Text (Text)
 import GHC.Generics (Generic)
 import Servant (JSON, Summary, Proxy (..))
-import Servant.API ((:<|>) (..), (:>), Capture, Get)
+import Servant.API ((:<|>) (..), (:>), Capture, Get, Put)
 import Servant.Checked.Exceptions (ErrStatus (..), Throws)
 import Servant.Checked.Exceptions.Extra (ErrDescription (..))
 
@@ -36,7 +36,7 @@ type AddLocation = "location"
   :> Summary "Add a new location"
   :> Throws LocationNameTooShortError
   :> Capture "locationName" Text
-  :> Get '[JSON] Location
+  :> Put '[JSON] Location
 
 type FindLocationById = "location"
   :> "findById"
