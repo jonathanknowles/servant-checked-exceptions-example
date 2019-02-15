@@ -1,6 +1,7 @@
 module Main where
 
 import Config (baseUrl)
+import Control.Monad (void)
 import Control.Monad.IO.Class (liftIO)
 import Data.Text (Text)
 import Network.HTTP.Client (defaultManagerSettings, newManager)
@@ -23,7 +24,7 @@ main = do
           findLocationByName (Text.pack name)
   manager <- newManager defaultManagerSettings
   let env = mkClientEnv manager baseUrl
-  print =<< runClientM program env
+  void $ runClientM program env
 
   where
 
