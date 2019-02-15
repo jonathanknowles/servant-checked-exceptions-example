@@ -1,12 +1,12 @@
 ## Introduction
 
-A simple example of how to use the `servant-checked-exceptions` library.
+A simple example of how to use the [`servant-checked-exceptions`](https://hackage.haskell.org/package/servant-checked-exceptions) library.
 
-This example has a simple API, representing a simple database of locations, where each location has a unique integer ID and a unique name.
+This example has a simple [API](https://github.com/jonathanknowles/servant-checked-exceptions-example/blob/master/common/Api.hs), representing a simple database of locations, where each location has a unique integer ID and a unique name.
 
 The API provides operations to add new locations, and to find existing locations based on ther IDs or names.
 
-Each endpoint is capable of throwing exceptions, as declared with the `Throws` combinator. Each exception type corresponds to a specific HTTP error code.
+Each endpoint is capable of throwing exceptions, as declared with the [`Throws`](hackage.haskell.org/package/servant-checked-exceptions-core/docs/Servant-Checked-Exceptions-Internal-Servant-API.html#t:Throws) combinator. Each exception type corresponds to a specific HTTP error code.
 
 ## Building
 ```
