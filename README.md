@@ -4,6 +4,7 @@
 2. [Building](#building)
 3. [Running the server](#running-the-server)
 4. [Running the client](#running-the-client)
+5. [Generating Swagger](#generating-swagger)
 
 ## Introduction
 
@@ -16,15 +17,21 @@ The API provides operations to add new locations, and to find existing locations
 Each endpoint is capable of throwing exceptions, as declared with the [`Throws`](hackage.haskell.org/package/servant-checked-exceptions-core/docs/Servant-Checked-Exceptions-Internal-Servant-API.html#t:Throws) combinator. Each exception type corresponds to a specific HTTP error code.
 
 ## Building
+
 ```
 $ stack build
 ```
+
 ## Running the server
+
 ```
 $ stack exec server
 ```
+
 ## Running the client
+
 ### Adding locations
+
 ```
 $ stack exec client -- addLocation "Cambridge"
 Location {locationId = 0, locationName = "Cambridge"}
@@ -38,7 +45,9 @@ Location {locationId = 2, locationName = "Boston"}
 $ stack exec client -- addLocation "Taipei"
 Location {locationId = 3, locationName = "Taipei"}
 ```
+
 ### Adding locations (unsuccessfully, triggering exceptions)
+
 ```
 $ stack exec client -- addLocation "A"
 LocationNameTooShortError
@@ -46,7 +55,9 @@ LocationNameTooShortError
 $ stack exec client -- addLocation "****"
 LocationNameHasInvalidCharsError
 ```
+
 ### Finding locations
+
 ```
 $ stack exec client -- findLocationById 0
 Location {locationId = 0, locationName = "Cambridge"}
@@ -54,12 +65,20 @@ Location {locationId = 0, locationName = "Cambridge"}
 $ stack exec client -- findLocationByName Oxford
 Location {locationId = 1, locationName = "Oxford"}
 ```
+
 ### Finding locations (unsuccessfully, triggering exceptions)
+
 ```
 $ stack exec client -- findLocationById 1000
 NoMatchingLocationError
 
 $ stack exec client -- findLocationByName Utopia
 NoMatchingLocationError
+```
+
+## Generating Swagger
+
+```
+$ stack exec swagger | json_pp | less
 ```
 
