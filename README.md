@@ -1,3 +1,10 @@
+## Contents
+
+1. [Introduction](#introduction)
+2. [Building](#building)
+3. [Running the server](#running-the-server)
+4. [Running the client](#running-the-client)
+
 ## Introduction
 
 A simple example of how to use the [`servant-checked-exceptions`](https://hackage.haskell.org/package/servant-checked-exceptions) library.
