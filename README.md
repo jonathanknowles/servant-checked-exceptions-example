@@ -8,9 +8,9 @@
 
 ## Introduction
 
-A simple example of how to use the [`servant-checked-exceptions`](https://hackage.haskell.org/package/servant-checked-exceptions) library.
+This repository contains a simple example of how to use the [`servant-checked-exceptions`](https://hackage.haskell.org/package/servant-checked-exceptions) library.
 
-This example has a simple [API](https://github.com/jonathanknowles/servant-checked-exceptions-example/blob/master/common/Api.hs), representing a simple database of locations, where each location has a unique integer ID and a unique name.
+The example has a simple [API](https://github.com/jonathanknowles/servant-checked-exceptions-example/blob/master/common/Api.hs), representing a simple database of locations, where each location has a unique integer ID and a unique name.
 
 The API provides operations to add new locations, and to find existing locations based on ther IDs or names.
 
