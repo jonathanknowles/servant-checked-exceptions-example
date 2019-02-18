@@ -8,3 +8,6 @@ extra-deps:
   commit: 783a2772f82b60e8d5c27935f70cc69e7efa0f4f
   subdirs:
   - servant-client
+- git: git@github.com:jonathanknowles/servant-swagger
+  commit: 74806fcc68b5158acbeb1c4e73b32796b7a6a7de
+
