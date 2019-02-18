@@ -18,13 +18,13 @@ Each endpoint is capable of throwing exceptions, as declared with the [`Throws`]
 
 ## Building
 
-```
+```Haskell
 $ stack build
 ```
 
 ## Running the server
 
-```
+```Haskell
 $ stack exec server
 ```
 
@@ -32,7 +32,7 @@ $ stack exec server
 
 ### Adding locations
 
-```
+```Haskell
 $ stack exec client -- addLocation "Cambridge"
 Location {locationId = 0, locationName = "Cambridge"}
 
@@ -48,7 +48,7 @@ Location {locationId = 3, locationName = "Taipei"}
 
 ### Adding locations (unsuccessfully, triggering exceptions)
 
-```
+```Haskell
 $ stack exec client -- addLocation "A"
 LocationNameTooShortError
 
@@ -58,7 +58,7 @@ LocationNameHasInvalidCharsError
 
 ### Finding locations
 
-```
+```Haskell
 $ stack exec client -- findLocationById 0
 Location {locationId = 0, locationName = "Cambridge"}
 
@@ -68,7 +68,7 @@ Location {locationId = 1, locationName = "Oxford"}
 
 ### Finding locations (unsuccessfully, triggering exceptions)
 
-```
+```Haskell
 $ stack exec client -- findLocationById 1000
 NoMatchingLocationError
 
@@ -78,7 +78,7 @@ NoMatchingLocationError
 
 ## Generating Swagger
 
-```
+```Haskell
 $ stack exec swagger | json_pp | less
 ```
 
