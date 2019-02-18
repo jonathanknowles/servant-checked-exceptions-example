@@ -99,13 +99,13 @@ instance ErrStatus NoMatchingLocationError where
 
 instance ErrDescription LocationNameHasInvalidCharsError where
   toErrDescription _ =
-    "A location name can only contain alphabetic and space characters."
+    "the location name contained non-alphabetic characters"
 instance ErrDescription LocationNameTooShortError where
   toErrDescription _ =
-    "The specified location name was too short."
+    "the location name was too short"
 instance ErrDescription NoMatchingLocationError where
   toErrDescription _ =
-    "A matching location was not found."
+    "a matching location was not found"
 
 locationNameTooShort :: Text -> Bool
 locationNameTooShort = (< minimumLocationNameLength) . Text.length
