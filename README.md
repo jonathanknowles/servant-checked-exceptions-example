@@ -28,10 +28,13 @@ $ stack exec server
 ```
 $ stack exec client -- addLocation "Cambridge"
 Location {locationId = 0, locationName = "Cambridge"}
+
 $ stack exec client -- addLocation "Oxford"
 Location {locationId = 1, locationName = "Oxford"}
+
 $ stack exec client -- addLocation "Boston"
 Location {locationId = 2, locationName = "Boston"}
+
 $ stack exec client -- addLocation "Taipei"
 Location {locationId = 3, locationName = "Taipei"}
 ```
@@ -39,6 +42,7 @@ Location {locationId = 3, locationName = "Taipei"}
 ```
 $ stack exec client -- addLocation "A"
 LocationNameTooShortError
+
 $ stack exec client -- addLocation "****"
 LocationNameHasInvalidCharsError
 ```
@@ -46,6 +50,7 @@ LocationNameHasInvalidCharsError
 ```
 $ stack exec client -- findLocationById 0
 Location {locationId = 0, locationName = "Cambridge"}
+
 $ stack exec client -- findLocationByName Oxford
 Location {locationId = 1, locationName = "Oxford"}
 ```
@@ -53,6 +58,8 @@ Location {locationId = 1, locationName = "Oxford"}
 ```
 $ stack exec client -- findLocationById 1000
 NoMatchingLocationError
+
 $ stack exec client -- findLocationByName Utopia
 NoMatchingLocationError
 ```
+
