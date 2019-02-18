@@ -8,13 +8,22 @@
 
 ## Introduction
 
-This repository contains a simple example of how to use the [`servant-checked-exceptions`](https://hackage.haskell.org/package/servant-checked-exceptions) library.
+This repository contains a simple example of how to use the
+[`servant-checked-exceptions`](https://hackage.haskell.org/package/servant-checked-exceptions)
+library.
 
-The example has a simple [API](https://github.com/jonathanknowles/servant-checked-exceptions-example/blob/master/common/Api.hs), representing a simple database of locations, where each location has a unique integer ID and a unique name.
+The example has a simple [API](https://github.com/jonathanknowles/servant-checked-exceptions-example/blob/master/common/Api.hs),
+representing a simple database of [locations](https://github.com/jonathanknowles/servant-checked-exceptions-example/blob/master/common/Api.hs#L62),
+where each location has a [unique integer ID](https://github.com/jonathanknowles/servant-checked-exceptions-example/blob/master/common/Api.hs#L63)
+and a [unique name](https://github.com/jonathanknowles/servant-checked-exceptions-example/blob/master/common/Api.hs#L64).
 
-The API provides operations to add new locations, and to find existing locations based on ther IDs or names.
+The API provides operations to [add new locations](https://github.com/jonathanknowles/servant-checked-exceptions-example/blob/master/common/Api.hs#L40),
+as well as to [find existing locations](https://github.com/jonathanknowles/servant-checked-exceptions-example/blob/master/common/Api.hs#L48)
+based on ther IDs or names.
 
-Each endpoint is capable of throwing exceptions, as declared with the [`Throws`](hackage.haskell.org/package/servant-checked-exceptions-core/docs/Servant-Checked-Exceptions-Internal-Servant-API.html#t:Throws) combinator. Each exception type corresponds to a specific HTTP error code.
+Each endpoint is capable of throwing exceptions, as declared with the
+[`Throws`](https://hackage.haskell.org/package/servant-checked-exceptions-core/docs/Servant-Checked-Exceptions-Internal-Servant-API.html#t:Throws)
+combinator. Each exception type corresponds to a specific HTTP error code.
 
 ## Building
 
